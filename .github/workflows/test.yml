@@ -64,12 +64,11 @@ jobs:
           echo "--- captured output ---"
           cat /tmp/debug.out
 
-      - name: Debug — dump the generated launchd plist
-        run: cat "$HOME/Library/LaunchAgents/homebrew.mxcl.anywh-relay.plist"
-
       - name: Start the service and confirm it opens its port
         run: |
           brew services start anywh-relay
+          echo "--- generated plist ---"
+          cat "$HOME/Library/LaunchAgents/homebrew.mxcl.anywh-relay.plist"
           port="$(grep '^RELAY_PORT=' "$HOME/.config/anywh/env/default.env" | cut -d= -f2)"
           echo "waiting on port $port"
           for _ in $(seq 1 15); do
