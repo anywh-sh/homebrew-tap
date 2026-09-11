@@ -45,6 +45,15 @@ jobs:
           libexec="$(brew --prefix anywh-relay)/libexec"
           "$libexec/infra/systemd/add-profile.sh" default --mode dev --relay-host 127.0.0.1
 
+      # Debug aid: `brew services` swallows stdout/stderr into log_path/
+      # error_log_path, and the previous run showed both empty — running
+      # the exact same command in the foreground surfaces whatever
+      # launchd was hiding.
+      - name: Debug — run the service's exact command in the foreground
+        run: |
+          libexec="$(brew --prefix anywh-relay)/libexec"
+          timeout 5 "$(brew --prefix node)/bin/node" "--env-file-if-exists=$HOME/.config/anywh/env/default.env" "$libexec/relay/dist/server.js" || true
+
       - name: Start the service and confirm it opens its port
         run: |
           brew services start anywh-relay
