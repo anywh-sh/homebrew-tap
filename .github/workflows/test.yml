@@ -18,9 +18,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - run: brew audit --strict Formula/anywh-relay.rb
+      # `brew audit`/`brew install` on a bare path is disabled by newer
+      # Homebrew — tap this checkout locally so both can address the
+      # formula by name, the same way a real `brew tap anywh-sh/tap`
+      # would.
+      - run: brew tap anywh-sh/tap "$PWD"
 
-      - run: brew install --formula ./Formula/anywh-relay.rb
+      - run: brew audit --strict anywh-sh/tap/anywh-relay
+
+      - run: brew install anywh-sh/tap/anywh-relay
 
       - name: Confirm node-pty loads under Homebrew's node
         run: |
