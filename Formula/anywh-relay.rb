@@ -20,7 +20,7 @@ class AnywhRelay < Formula
   # no npm script wrapper in the installed tarball).
   service do
     run [
-      formula_opt_bin("node"),
+      formula_opt_bin("node")/"node",
       "--env-file-if-exists=#{Dir.home}/.config/anywh/env/default.env",
       opt_libexec/"relay/dist/server.js",
     ]
