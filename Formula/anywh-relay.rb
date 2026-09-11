@@ -32,6 +32,6 @@ class AnywhRelay < Formula
   end
 
   test do
-    assert_predicate libexec/"relay/dist/server.js", :exist?
+    assert_path_exists libexec/"relay/dist/server.js"
   end
 end
