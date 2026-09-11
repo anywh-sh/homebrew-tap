@@ -52,7 +52,17 @@ jobs:
       - name: Debug — run the service's exact command in the foreground
         run: |
           libexec="$(brew --prefix anywh-relay)/libexec"
-          timeout 5 "$(brew --prefix node)/bin/node" "--env-file-if-exists=$HOME/.config/anywh/env/default.env" "$libexec/relay/dist/server.js" || true
+          "$(brew --prefix node)/bin/node" "--env-file-if-exists=$HOME/.config/anywh/env/default.env" "$libexec/relay/dist/server.js" > /tmp/debug.out 2>&1 &
+          pid=$!
+          sleep 3
+          if kill -0 "$pid" 2>/dev/null; then
+            echo "still running after 3s (good sign) — killing for cleanup"
+            kill "$pid"
+          else
+            echo "process already exited"
+          fi
+          echo "--- captured output ---"
+          cat /tmp/debug.out
 
       - name: Start the service and confirm it opens its port
         run: |
