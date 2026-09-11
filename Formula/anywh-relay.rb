@@ -1,7 +1,6 @@
 class AnywhRelay < Formula
   desc "Headless relay that lets the anywh app talk to a local Claude Code CLI"
   homepage "https://anywh.sh"
-  version "0.1.1"
   url "https://github.com/anywh-sh/anywh/releases/download/v0.1.1/anywh-relay-0.1.1-darwin-arm64.tar.gz"
   sha256 "074fe559dd7ebf43bd7bb032c21f29620f089660f1ad4318d110f9c7ece6274e"
   license "Apache-2.0"
@@ -14,8 +13,8 @@ class AnywhRelay < Formula
   end
 
   service do
-    run [Formula["node"].opt_bin/"node", libexec/"relay/dist/server.js"]
-    working_dir libexec/"relay"
+    run [formula_opt_bin("node"), opt_libexec/"relay/dist/server.js"]
+    working_dir opt_libexec/"relay"
     environment_variables ANYWH_PROFILE: "default"
     keep_alive true
     log_path var/"log/anywh-relay.log"
@@ -30,5 +29,9 @@ class AnywhRelay < Formula
       Then:
         brew services start anywh-relay
     CAVEATS
+  end
+
+  test do
+    assert_predicate libexec/"relay/dist/server.js", :exist?
   end
 end
