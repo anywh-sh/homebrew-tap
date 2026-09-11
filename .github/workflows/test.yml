@@ -64,6 +64,9 @@ jobs:
           echo "--- captured output ---"
           cat /tmp/debug.out
 
+      - name: Debug — dump the generated launchd plist
+        run: cat "$HOME/Library/LaunchAgents/homebrew.mxcl.anywh-relay.plist"
+
       - name: Start the service and confirm it opens its port
         run: |
           brew services start anywh-relay
