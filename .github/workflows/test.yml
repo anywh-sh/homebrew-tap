@@ -6,7 +6,7 @@ name: Test formula
 # Mac would, without touching anyone's actual machine. Also the only real
 # check of the risk flagged in anywh's journal/62-distribuicao-instalacao-
 # plano.md §"Fase 4": whether the node-pty binary node-gyp compiled in
-# anywh's CI actually loads under Homebrew's own `node`, and now whether
+# anywh's CI actually loads under Homebrew's own `node`, and whether
 # `brew services start` actually boots the relay and opens its port —
 # runner is destroyed after the job either way, so nothing here ever
 # touches a real machine or leaves anything behind.
@@ -45,30 +45,9 @@ jobs:
           libexec="$(brew --prefix anywh-relay)/libexec"
           "$libexec/infra/systemd/add-profile.sh" default --mode dev --relay-host 127.0.0.1
 
-      # Debug aid: `brew services` swallows stdout/stderr into log_path/
-      # error_log_path, and the previous run showed both empty — running
-      # the exact same command in the foreground surfaces whatever
-      # launchd was hiding.
-      - name: Debug — run the service's exact command in the foreground
-        run: |
-          libexec="$(brew --prefix anywh-relay)/libexec"
-          "$(brew --prefix node)/bin/node" "--env-file-if-exists=$HOME/.config/anywh/env/default.env" "$libexec/relay/dist/server.js" > /tmp/debug.out 2>&1 &
-          pid=$!
-          sleep 3
-          if kill -0 "$pid" 2>/dev/null; then
-            echo "still running after 3s (good sign) — killing for cleanup"
-            kill "$pid"
-          else
-            echo "process already exited"
-          fi
-          echo "--- captured output ---"
-          cat /tmp/debug.out
-
       - name: Start the service and confirm it opens its port
         run: |
           brew services start anywh-relay
-          echo "--- generated plist ---"
-          cat "$HOME/Library/LaunchAgents/homebrew.mxcl.anywh-relay.plist"
           port="$(grep '^RELAY_PORT=' "$HOME/.config/anywh/env/default.env" | cut -d= -f2)"
           echo "waiting on port $port"
           for _ in $(seq 1 15); do
