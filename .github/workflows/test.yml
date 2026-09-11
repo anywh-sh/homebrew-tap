@@ -1,0 +1,28 @@
+name: Test formula
+
+# Runs on the same arch the formula requires (depends_on arch: :arm64) —
+# macos-14 GitHub runners are Apple Silicon, so `brew install` here
+# exercises the exact same download+checksum+extract path a real user's
+# Mac would, without touching anyone's actual machine. Also the only real
+# check of the risk flagged in anywh's journal/62-distribuicao-instalacao-
+# plano.md §"Fase 4": whether the node-pty binary node-gyp compiled in
+# anywh's CI actually loads under Homebrew's own `node`.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v7
+
+      - run: brew audit --strict Formula/anywh-relay.rb
+
+      - run: brew install --formula ./Formula/anywh-relay.rb
+
+      - name: Confirm node-pty loads under Homebrew's node
+        run: |
+          libexec="$(brew --prefix anywh-relay)/libexec"
+          "$(brew --prefix node)/bin/node" -e "require('$libexec/relay/node_modules/node-pty'); console.log('node-pty loaded OK')"
