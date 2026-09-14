@@ -1,8 +1,8 @@
 class AnywhRelay < Formula
   desc "Headless relay that lets the anywh app talk to a local Claude Code CLI"
   homepage "https://anywh.sh"
-  url "https://github.com/anywh-sh/anywh/releases/download/v0.1.2/anywh-relay-0.1.2-darwin-arm64.tar.gz"
-  sha256 "80b38a499db192f729552b821d867441ae248d99d5d6262511bcc90dee9d8b77"
+  url "https://github.com/anywh-sh/anywh/releases/download/v0.1.3/anywh-relay-0.1.3-darwin-arm64.tar.gz"
+  sha256 "060bd6b6f44b72ed0b404c72de516c91e0d2fd7d70448472abd240fcecd87912"
   license "Apache-2.0"
 
   depends_on arch: :arm64
@@ -11,23 +11,27 @@ class AnywhRelay < Formula
     libexec.install Dir["*"]
   end
 
-  # No `depends_on "node"`: this ships a Node Single Executable Application
-  # (built by relay/sea-build/build.mjs) with the runtime bundled in, not a
-  # script that needs one installed. A shared "node" dependency has a sharp
-  # edge: `brew uninstall anywh-relay` autoremoves Node along with it
-  # whenever Node was only ever pulled in as this formula's dependency (not
-  # installed on request by the user directly) — even if the user has since
-  # started relying on that same Node for unrelated work. Bundling the
-  # runtime instead means this formula's presence has zero bearing on
-  # whether Node exists on the machine at all.
+  # No `depends_on "node"`: this ships a Node Single Executable
+  # Application (built by relay/sea-build/build.mjs) with the
+  # runtime bundled in, not a script that needs one installed. A
+  # shared "node" dependency has a sharp edge: `brew uninstall
+  # anywh-relay` autoremoves Node along with it whenever Node was
+  # only ever pulled in as this formula's dependency (not
+  # installed on request by the user directly) — even if the user
+  # has since started relying on that same Node for unrelated
+  # work. Bundling the runtime instead means this formula's
+  # presence has zero bearing on whether Node exists on the
+  # machine at all.
   #
-  # No systemd EnvironmentFile= equivalent here either — Homebrew's service
-  # DSL has no such thing — so the "default" profile's config comes in via
-  # RELAY_ENV_FILE, a plain environment variable the SEA binary's own
-  # entrypoint (relay/sea-build/sea-entry.cjs) applies itself. That
-  # indirection exists because Node SEA doesn't process runtime CLI flags
-  # the way a plain `node` invocation does: the previous approach here,
-  # passing `--env-file-if-exists=...` on the command line, is silently
+  # No systemd EnvironmentFile= equivalent here either — Homebrew's
+  # service DSL has no such thing — so the "default" profile's
+  # config comes in via RELAY_ENV_FILE, a plain environment
+  # variable the SEA binary's own entrypoint
+  # (relay/sea-build/sea-entry.cjs) applies itself. That
+  # indirection exists because Node SEA doesn't process runtime
+  # CLI flags the way a plain `node` invocation does: the
+  # previous approach here, passing
+  # `--env-file-if-exists=...` on the command line, is silently
   # ignored by a SEA binary.
   service do
     run [opt_libexec/"anywh-relay"]
