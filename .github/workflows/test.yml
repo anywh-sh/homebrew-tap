@@ -3,13 +3,15 @@ name: Test formula
 # Runs on the same arch the formula requires (depends_on arch: :arm64) —
 # macos-14 GitHub runners are Apple Silicon, so `brew install` here
 # exercises the exact same download+checksum+extract path a real user's
-# Mac would, without touching anyone's actual machine. Also the only real
-# check of the risk flagged in anywh's journal/62-distribuicao-instalacao-
-# plano.md §"Fase 4": whether the node-pty binary node-gyp compiled in
-# anywh's CI actually loads under Homebrew's own `node`, and whether
-# `brew services start` actually boots the relay and opens its port —
-# runner is destroyed after the job either way, so nothing here ever
-# touches a real machine or leaves anything behind.
+# Mac would, without touching anyone's actual machine. Also the real check
+# of the risk this formula's own comments describe: the relay ships as a
+# Node Single Executable Application with node-pty's native addon loaded
+# via a shim rooted at a sibling node_modules/node-pty (no shared `node`
+# formula involved at all) — node-pty is a static top-level import
+# (terminalSession.ts), so if that load ever failed the process would crash
+# before opening its port, and "Start the service and confirm it opens its
+# port" below would catch it. Runner is destroyed after the job either way,
+# so nothing here ever touches a real machine or leaves anything behind.
 on:
   push:
     branches: [main]
@@ -30,11 +32,6 @@ jobs:
       - run: brew audit --strict anywh-sh/tap/anywh-relay
 
       - run: brew install anywh-sh/tap/anywh-relay
-
-      - name: Confirm node-pty loads under Homebrew's node
-        run: |
-          libexec="$(brew --prefix anywh-relay)/libexec"
-          "$(brew --prefix node)/bin/node" -e "require('$libexec/relay/node_modules/node-pty'); console.log('node-pty loaded OK')"
 
       # Same script + --mode dev the formula's own caveats tell a real
       # user to run — writes ~/.config/anywh/env/default.env, never
