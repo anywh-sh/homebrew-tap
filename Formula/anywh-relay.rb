@@ -1,14 +1,8 @@
 class AnywhRelay < Formula
   desc "Headless relay that lets the anywh app talk to a local Claude Code CLI"
   homepage "https://anywh.sh"
-  # TODO before merging: bump to the release that actually ships the SEA
-  # binary this formula now runs (relay/sea-build/build.mjs in the anywh
-  # repo) — url/sha256 below still point at v0.1.1's old dist/+node_modules
-  # tarball, which has no `anywh-relay` executable in it at all. Cut that
-  # anywh release first, then update both to match its real
-  # anywh-relay-<version>-darwin-arm64.tar.gz asset.
-  url "https://github.com/anywh-sh/anywh/releases/download/v0.1.1/anywh-relay-0.1.1-darwin-arm64.tar.gz"
-  sha256 "2e21ae104bb6ec0fb8a460bc67bf426198e5c6f8decf25a566f49464ac432b32"
+  url "https://github.com/anywh-sh/anywh/releases/download/v0.1.2/anywh-relay-0.1.2-darwin-arm64.tar.gz"
+  sha256 "80b38a499db192f729552b821d867441ae248d99d5d6262511bcc90dee9d8b77"
   license "Apache-2.0"
 
   depends_on arch: :arm64
