@@ -49,6 +49,11 @@ class AnywhRelay < Formula
 
       Then:
         brew services start anywh-relay
+
+      Uninstalling? Homebrew has no postuninstall hook (unlike apt's
+      prerm/postrm), so `brew uninstall`/`brew untap` won't reliably stop
+      a launchd service that's still loaded — run this first, in order:
+        brew services stop anywh-relay
     CAVEATS
   end
 
