@@ -1,8 +1,8 @@
 class AnywhRelay < Formula
   desc "Headless relay that lets the anywh app talk to a local Claude Code CLI"
   homepage "https://anywh.sh"
-  url "https://github.com/anywh-sh/anywh/releases/download/v0.1.4/anywh-relay-0.1.4-darwin-arm64.tar.gz"
-  sha256 "7157e7a7b4a33239d31f6773045429cfb0fc6d0295be9216e470490b7883d581"
+  url "https://github.com/anywh-sh/anywh/releases/download/v0.1.5/anywh-relay-0.1.5-darwin-arm64.tar.gz"
+  sha256 "ef2213b4f15b5d835d0c8d44beb3bfc360ea537c7ecaf7116a5962c02191235f"
   license "Apache-2.0"
 
   depends_on arch: :arm64
@@ -49,11 +49,6 @@ class AnywhRelay < Formula
 
       Then:
         brew services start anywh-relay
-
-      Uninstalling? Homebrew has no postuninstall hook (unlike apt's
-      prerm/postrm), so `brew uninstall`/`brew untap` won't reliably stop
-      a launchd service that's still loaded — run this first, in order:
-        brew services stop anywh-relay
     CAVEATS
   end
 
