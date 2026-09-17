@@ -1,8 +1,8 @@
 class AnywhRelay < Formula
   desc "Headless relay that lets the anywh app talk to a local Claude Code CLI"
   homepage "https://anywh.sh"
-  url "https://github.com/anywh-sh/anywh/releases/download/v0.1.7/anywh-relay-0.1.7-darwin-arm64.tar.gz"
-  sha256 "bc2b077fa920196c26fb08d8544a788ae3aee8e0600a120017e5c88cafe3cb21"
+  url "https://github.com/anywh-sh/anywh/releases/download/v0.1.8/anywh-relay-0.1.8-darwin-arm64.tar.gz"
+  sha256 "1cafd7c4366b3314212e89ce99dd1a1563223cc8e2ab350ce6ce6e19525ffaa7"
   license "Apache-2.0"
 
   depends_on arch: :arm64
